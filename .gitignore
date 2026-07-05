@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# 個人校正表(內含你自己的專有名詞,不公開)
+# 公開的是 corrections.example.csv,使用者自行複製成 corrections.csv
+corrections.csv
+
+# 個人啟動檔(內含你電腦的絕對路徑,不公開)
+# 公開的是 start_zentype.example.bat,使用者自行複製成 start_zentype.bat
+start_zentype.bat
+
+# 環境變數 / 憑證(本工具目前用不到,保險起見一併排除)
+.env
+*.key
+
+# 暫存
+*.log
+_sv_tmp/
