@@ -17,3 +17,8 @@ start_zentype.bat
 # 暫存
 *.log
 _sv_tmp/
+
+# PyInstaller 打包產物(EXE 與中間檔,不進版控)
+build/
+dist/
+*.spec

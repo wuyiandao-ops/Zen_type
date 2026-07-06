@@ -106,7 +106,26 @@ python zen_type.py
 
 ---
 
-## 六、疑難排解
+## 六、打包成 EXE(選用)
+
+給不想裝 Python 的人使用時,可打包成單一 EXE:
+```
+pip install pyinstaller
+build_exe.bat
+```
+產物在 `dist\ZenType.exe`。打包指令已用 `--collect-all opencc/sounddevice/soundfile`
+收齊字典與原生 DLL(否則轉繁或錄音會在執行時崩潰)。
+
+**散布時要一起給的東西**:
+- `ZenType.exe`
+- `corrections.csv`(放在 EXE 同層資料夾)
+
+> 注意:EXE 仍需對方電腦上有 **SenseVoice 服務(8009)** 與 **Ollama** 在執行——
+> 辨識引擎與模型無法包進 EXE。EXE 只是免去安裝 Python 這一步。
+
+---
+
+## 七、疑難排解
 
 | 症狀 | 原因 / 解法 |
 |---|---|

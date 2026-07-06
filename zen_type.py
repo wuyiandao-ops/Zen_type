@@ -84,7 +84,16 @@ OLLAMA_MODEL      = "qwen2.5:3b"    # 若沒抓 3b,改成你有的,例如 "qwen2
 POLISH_TIMEOUT    = 8               # Qwen 潤稿逾時(秒);超過就用未潤稿原文
 SAMPLE_RATE       = 16000           # SenseVoice 用 16k
 POLISH_ENABLED    = True            # 啟動時是否開啟潤稿(隨時可用 F10 切換)
-CORRECTIONS_CSV   = os.path.join(os.path.dirname(os.path.abspath(__file__)), "corrections.csv")
+
+# 決定「程式所在資料夾」:
+#   - 打包成 EXE(PyInstaller)後 sys.frozen 為 True,__file__ 會指向暫存解壓目錄,
+#     必須改用 sys.executable(EXE 本身)的所在資料夾,才能讀到放在 EXE 旁邊的 corrections.csv。
+#   - 一般用 python 執行時,維持原本以 __file__ 為基準。
+if getattr(sys, "frozen", False):
+    _BASE_DIR = os.path.dirname(os.path.abspath(sys.executable))
+else:
+    _BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CORRECTIONS_CSV   = os.path.join(_BASE_DIR, "corrections.csv")
 # ===========================================================
 
 # ---- 執行期狀態 ----
