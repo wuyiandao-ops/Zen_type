@@ -1,0 +1,22 @@
+# ZenType 所需套件  ——  安裝指令: pip install -r requirements.txt
+# (安裝.bat 會自動幫你跑這個)
+
+# ===== ZenType 客戶端 =====
+sounddevice
+soundfile
+numpy
+requests
+pyperclip
+keyboard
+
+# ===== 本地辨識服務(SenseVoice / FunASR)=====
+# 注意:funasr 會自動一併安裝 torch / torchaudio,體積較大(數 GB),
+#       首次安裝需要一點時間與網路,屬正常現象。
+funasr
+modelscope
+fastapi
+uvicorn
+python-multipart
+
+# ===== 共用:簡體轉繁體(台灣)=====
+opencc-python-reimplemented

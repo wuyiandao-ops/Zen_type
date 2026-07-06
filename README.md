@@ -10,6 +10,8 @@
 按住熱鍵說話,放開後自動:**SenseVoice 離線辨識 → 校正表替換 → Qwen 潤稿 → 貼到游標處**。
 全程音訊不出你的電腦(只有潤稿走本機 Ollama),隱私、離線、免月費。
 
+> 🚀 **完全沒經驗?** 直接看 **[新手安裝指南.md](新手安裝指南.md)**,照著點就能裝好、用起來。
+
 ---
 
 ## 一、架構(三顆現成零件 + 這支膠水)
@@ -18,7 +20,7 @@
 [右 Ctrl 按住錄音]
       │  音訊(記憶體中的 wav)
       ▼
-SenseVoice 服務 (埠 8009)  ── 你已有的 app_sensevoice.py
+SenseVoice 服務 (埠 8009)  ── sensevoice_server.py(本專案內含)
       │  辨識文字(已簡轉繁)
       ▼
 校正表 corrections.csv     ── 純字串替換,零延遲
@@ -32,42 +34,26 @@ Ctrl+V 貼到游標所在的任何 App
 
 ---
 
-## 二、第一次使用前(三個前置)
+## 二、安裝(第一次,一次就好)
 
-### 1. 啟動 SenseVoice 辨識服務(埠 8009)
+> 完全沒經驗的話,請改看 **[新手安裝指南.md](新手安裝指南.md)**(有圖文步驟)。以下是精簡版。
 
-本工具**不含**辨識引擎,需自備一個對外提供 `POST /api/transcribe`(回傳 `{"text": ...}`)、
-埠 8009 的 SenseVoice/FunASR 服務。啟動你自己的服務腳本:
-```
-python <你的路徑>\app_sensevoice.py
-```
-> 看到「服務就緒(埠 8009)」才算成功。這支不要關,讓它常駐。
-> 服務位址可在 `zen_type.py` 設定區的 `SENSEVOICE_URL` 調整。
+1. 安裝 **Python**(https://www.python.org/downloads/ ,安裝時勾「Add python.exe to PATH」)
+2. 安裝 **Ollama**(https://ollama.com/download )
+3. 雙擊 **`install.bat`** —— 自動安裝套件、下載 Qwen 與 SenseVoice 模型(約幾 GB,請耐心等)。
 
-### 2. 確認 Ollama 已啟動,並抓好潤稿模型
-```
-ollama pull qwen2.5:3b
-```
-> 低端機建議用 `qwen2.5:3b`;若還是慢,改用 `qwen2.5:1.5b`。
-> 換模型後,記得同步改 `zen_type.py` 設定區的 `OLLAMA_MODEL`。
-
-### 3. 安裝這支客戶端唯一缺的套件
-```
-pip install keyboard
-```
-> 其餘(sounddevice、soundfile、numpy、requests、pyperclip)你的環境已具備。
+> `install.bat` 等同於依序執行:
+> `pip install -r requirements.txt` → `ollama pull qwen2.5:3b` → 下載 SenseVoice 模型(約 900MB)。
 
 ---
 
 ## 三、啟動 ZenType
 
-**方式 A:一鍵啟動(推薦)**
-複製 `start_zentype.example.bat` 為 `start_zentype.bat`,把裡面的 `SENSEVOICE_SCRIPT`
-改成你的 `app_sensevoice.py` 路徑,之後雙擊 `start_zentype.bat` 即可(會一起開服務與客戶端)。
+**方式 A:一鍵啟動(推薦)** — 雙擊 **`start.bat`**,會自動開啟辨識服務(sensevoice_server.py)與客戶端。
 
-**方式 B:手動啟動**
-先啟動上面的 SenseVoice 服務,再於本資料夾執行:
+**方式 B:手動啟動** — 開兩個視窗分別執行:
 ```
+python sensevoice_server.py   (等它顯示「服務就緒(埠 8009)」)
 python zen_type.py
 ```
 
@@ -130,7 +116,7 @@ build_exe.bat
 | 症狀 | 原因 / 解法 |
 |---|---|
 | 按右 Ctrl 沒反應 | `keyboard` 在某些環境需系統管理員權限 → 用「以系統管理員身分執行」開終端機再跑 |
-| 辨識失敗 8009 沒開 | 先啟動 `app_sensevoice.py`,確認看到「埠 8009」 |
+| 辨識失敗 8009 沒開 | 先啟動 `sensevoice_server.py`(或直接用 `start.bat`),確認看到「服務就緒(埠 8009)」 |
 | 潤稿每次都逾時跳過 | 模型太大/機器太慢 → 換 `qwen2.5:1.5b`,或調大 `POLISH_TIMEOUT`,或按 F10 關閉潤稿 |
 | 貼上的是舊剪貼簿內容 | 目標程式吃 Ctrl+V 較慢 → 可把 `paste_text` 內的 `time.sleep(0.15)` 調大一點 |
 | 中文變亂碼 | 主控台已在程式內設 UTF-8;若仍亂碼,終端機字型/編碼改 UTF-8 |
